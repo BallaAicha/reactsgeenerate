@@ -20,14 +20,38 @@ public class ViteProjectInitializer {
     private final FileService fileService;
     private static final long PROCESS_TIMEOUT_MINUTES = 5;
 
+//    public void createBaseViteProject(ProjectRequest request) throws IOException, InterruptedException {
+//        String projectPath = fileService.getTempProjectPath(request.getProjectName());
+//        String tempDir = fileService.getTempDir();
+//
+//        // Création du projet Vite
+//        executeProcess(
+//                new ProcessBuilder(
+//                        "npm", "create", "vite@latest",
+//                        request.getProjectName(),
+//                        "--", "--template", request.getLanguage().equals("typescript") ? "react-ts" : "react"
+//                ).directory(new File(tempDir)),
+//                "creating Vite project"
+//        );
+//
+//        // Installation des dépendances
+//        executeProcess(
+//                new ProcessBuilder("npm", "install")
+//                        .directory(new File(projectPath)),
+//                "installing dependencies"
+//        );
+//    }
+
+
     public void createBaseViteProject(ProjectRequest request) throws IOException, InterruptedException {
         String projectPath = fileService.getTempProjectPath(request.getProjectName());
         String tempDir = fileService.getTempDir();
+        String npmPath = fileService.getNpmPath(); // Obtenir le chemin vers npm
 
         // Création du projet Vite
         executeProcess(
                 new ProcessBuilder(
-                        "npm", "create", "vite@latest",
+                        npmPath, "create", "vite@latest", // Utiliser le chemin complet vers npm
                         request.getProjectName(),
                         "--", "--template", request.getLanguage().equals("typescript") ? "react-ts" : "react"
                 ).directory(new File(tempDir)),
@@ -36,7 +60,7 @@ public class ViteProjectInitializer {
 
         // Installation des dépendances
         executeProcess(
-                new ProcessBuilder("npm", "install")
+                new ProcessBuilder(npmPath, "install") // Utiliser le chemin complet vers npm
                         .directory(new File(projectPath)),
                 "installing dependencies"
         );
